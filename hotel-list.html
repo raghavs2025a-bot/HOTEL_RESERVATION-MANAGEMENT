@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotels in Chennai - StayEase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-orange: #FF6B35;
+            --dark-blue: #1a2744;
+            --success-green: #10b981;
+            --text-dark: #1a1a2e;
+            --text-gray: #666666;
+            --bg-light: #f5f5f5;
+            --border-light: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: var(--bg-light);
+        }
+
+        /* ============ NAVBAR ============ */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background-color: var(--dark-blue);
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background-color: var(--primary-orange);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-orange);
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .currency-switcher {
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .currency-switcher:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ============ MAIN CONTAINER ============ */
+        .main-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        /* ============ BREADCRUMB ============ */
+        .breadcrumb {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .breadcrumb span {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .breadcrumb span:hover {
+            color: var(--primary-orange);
+        }
+
+        /* ============ HEADER ============ */
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .result-count {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 20px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background-color: var(--primary-orange);
+            color: white;
+            border-color: var(--primary-orange);
+        }
+
+        /* ============ CONTENT LAYOUT ============ */
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 30px;
+        }
+
+        /* ============ SIDEBAR FILTERS ============ */
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .filter-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .reset-btn {
+            background: none;
+            border: none;
+            color: var(--primary-orange);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .reset-btn:hover {
+            color: #e85a24;
+        }
+
+        /* ============ FILTER SECTION ============ */
+        .filter-section {
+            margin-bottom: 25px;
+        }
+
+        .filter-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-section input[type="text"],
+        .filter-section select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+
+        .filter-section input[type="text"]:focus,
+        .filter-section select:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.1);
+        }
+
+        /* ============ PRICE SLIDER ============ */
+        .price-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .price-inputs input {
+            padding: 10px 12px;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        .price-range-slider {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+            accent-color: var(--primary-orange);
+        }
+
+        /* ============ CHECKBOXES & RADIOS ============ */
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .filter-option input[type="checkbox"],
+        .filter-option input[type="radio"] {
+            cursor: pointer;
+            accent-color: var(--primary-orange);
+        }
+
+        .filter-option label {
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-count {
+            color: var(--text-gray);
+            font-size: 12px;
+        }
+
+        /* ============ APPLY FILTERS BUTTON ============ */
+        .apply-filters-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-orange);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .apply-filters-btn:hover {
+            background-color: #e85a24;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        /* ============ HOTELS LIST ============ */
+        .hotels-container {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .hotel-card {
+            display: flex;
+            gap: 25px;
+            padding: 25px 0;
+            border-bottom: 1px solid var(--border-light);
+            transition: all 0.3s;
+        }
+
+        .hotel-card:last-child {
+            border-bottom: none;
+        }
+
+        .hotel-card:hover {
+            background-color: var(--bg-light);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 0 -25px;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .hotel-image {
+            width: 200px;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .hotel-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .hotel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .hotel-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .hotel-location {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-bottom: 10px;
+        }
+
+        .hotel-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .stars {
+            color: #fbbf24;
+            font-size: 13px;
+        }
+
+        .rating-label {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-dark);
+        }
+
+        .review-count {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        .hotel-price {
+            text-align: right;
+            min-width: 120px;
+        }
+
+        .price-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-orange);
+            margin-bottom: 8px;
+        }
+
+        .price-label {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        /* ============ AMENITIES ============ */
+        .amenities {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .amenity-tag {
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-light);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        /* ============ ACTION BUTTONS ============ */
+        .hotel-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .select-room-btn {
+            padding: 10px 24px;
+            background-color: var(--primary-orange);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .select-room-btn:hover {
+            background-color: #e85a24;
+            transform: translateY(-2px);
+        }
+
+        /* ============ PAGINATION ============ */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .pagination-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-light);
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .pagination-btn:hover {
+            border-color: var(--primary-orange);
+            color: var(--primary-orange);
+        }
+
+        .pagination-btn.active {
+            background-color: var(--primary-orange);
+            color: white;
+            border-color: var(--primary-orange);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ============ FOOTER ============ */
+        .footer {
+            background-color: var(--dark-blue);
+            color: rgba(255, 255, 255, 0.85);
+            padding: 60px 40px 30px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: var(--primary-orange);
+        }
+
+        .footer-logo-section {
+            margin-bottom: 20px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .footer-logo-icon {
+            width: 28px;
+            height: 28px;
+            background-color: var(--primary-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .footer-desc {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .social-icon:hover {
+            background-color: var(--primary-orange);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 1024px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .hotel-image {
+                width: 150px;
+                height: 130px;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 20px;
+            }
+
+            .hotel-card {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .hotel-image {
+                width: 100%;
+                height: 180px;
+            }
+
+            .hotel-header {
+                flex-direction: column;
+            }
+
+            .hotel-price {
+                text-align: left;
+            }
+
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .filter-buttons {
+                flex-wrap: wrap;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <div class="logo">
+                <div class="logo-icon">🏠</div>
+                <span>StayEase</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="index.html#destinations">Popular Destinations</a></li>
+                <li><a href="hotel-list.html">Hotels</a></li>
+                <li><a href="booking.html">My Booking</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+        <div class="navbar-right">
+            <select class="currency-switcher">
+                <option selected>INR ₹</option>
+                <option>USD $</option>
+                <option>EUR €</option>
+                <option>AED د.إ</option>
+            </select>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-container">
+        <!-- BREADCRUMB -->
+        <div class="breadcrumb">
+            <span>Home</span>
+            <span>›</span>
+            <span>Search Results</span>
+            <span>›</span>
+            <span>Hotels in Chennai</span>
+        </div>
+
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+            <h1 class="page-title">Hotels in Chennai</h1>
+            <div class="result-count">Showing <strong>4 results</strong> out of 250+ hotels</div>
+            <div class="filter-buttons">
+                <button class="filter-btn active">All Hotels</button>
+                <button class="filter-btn">3-Star</button>
+                <button class="filter-btn">4-Star</button>
+                <button class="filter-btn">5-Star</button>
+                <button class="filter-btn">Best Rated</button>
+                <button class="filter-btn">Budget-Friendly</button>
+            </div>
+        </div>
+
+        <!-- CONTENT WRAPPER -->
+        <div class="content-wrapper">
+            <!-- SIDEBAR FILTERS -->
+            <aside class="sidebar">
+                <div class="filter-header">
+                    <span class="filter-title">Filters</span>
+                    <button class="reset-btn">Reset All</button>
+                </div>
+
+                <!-- DESTINATION FILTER -->
+                <div class="filter-section">
+                    <div class="filter-section-title">Destination</div>
+                    <select>
+                        <option value="india" selected>India</option>
+                        <option value="usa">USA</option>
+                        <option value="uk">UK</option>
+                    </select>
+                    <select>
+                        <option value="chennai" selected>Chennai</option>
+                        <option value="mumbai">Mumbai</option>
+                        <option value="delhi">Delhi</option>
+                    </select>
+                </div>
+
+                <!-- PRICE FILTER -->
+                <div class="filter-section">
+                    <div class="filter-section-title">Price Range (₹ per night)</div>
+                    <div class="price-inputs">
+                        <input type="number" placeholder="Min" value="0">
+                        <input type="number" placeholder="Max" value="15000">
+                    </div>
+                    <input type="range" class="price-range-slider" min="0" max="15000" value="15000">
+                </div>
+
+                <!-- STAR RATING FILTER -->
+                <div class="filter-section">
+                    <div class="filter-section-title">Star Rating</div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="star5" checked>
+                        <label for="star5">
+                            <span>⭐⭐⭐⭐⭐ 5-Star</span>
+                            <span class="filter-count">(45)</span>
+                        </label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="star4" checked>
+                        <label for="star4">
+                            <span>⭐⭐⭐⭐ 4-Star</span>
+                            <span class="filter-count">(80)</span>
+                        </label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="star3" checked>
+                        <label for="star3">
+                            <span>⭐⭐⭐ 3-Star</span>
+                            <span class="filter-count">(125)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- COLLECTION FILTER -->
+                <div class="filter-section">
+                    <div class="filter-section-title">Collection</div>
+                    <div class="filter-option">
+                        <input type="radio" id="all" name="collection" checked>
+                        <label for="all">All Hotels</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="toprated" name="collection">
+                        <label for="toprated">Top Rated</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="budget" name="collection">
+                        <label for="budget">Budget-Friendly</label>
+                    </div>
+                </div>
+
+                <!-- GUEST REVIEWS FILTER -->
+                <div class="filter-section">
+                    <div class="filter-section-title">Guest Reviews</div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="superb" checked>
+                        <label for="superb">
+                            <span>Superb (9.0+)</span>
+                            <span class="filter-count">(60)</span>
+                        </label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="verygood" checked>
+                        <label for="verygood">
+                            <span>Very Good (8.0+)</span>
+                            <span class="filter-count">(110)</span>
+                        </label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="good" checked>
+                        <label for="good">
+                            <span>Good (7.0+)</span>
+                            <span class="filter-count">(80)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- AMENITIES FILTER -->
+                <div class="filter-section">
+                    <div class="filter-section-title">Popular Amenities</div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="wifi" checked>
+                        <label for="wifi">Free WiFi</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="pool" checked>
+                        <label for="pool">Swimming Pool</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="breakfast" checked>
+                        <label for="breakfast">Free Breakfast</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="parking" checked>
+                        <label for="parking">Parking</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="gym" checked>
+                        <label for="gym">Gym</label>
+                    </div>
+                </div>
+
+                <button class="apply-filters-btn">Apply Filters</button>
+            </aside>
+
+            <!-- HOTELS LIST -->
+            <div class="hotels-container">
+                <!-- HOTEL 1 -->
+                <div class="hotel-card">
+                    <div class="hotel-image"></div>
+                    <div class="hotel-details">
+                        <div class="hotel-header">
+                            <div class="hotel-info">
+                                <h3>Coromandel Grand</h3>
+                                <div class="hotel-location">Marina Beach, Chennai, India</div>
+                                <div class="hotel-rating">
+                                    <span class="stars">★★★★★</span>
+                                    <span class="rating-label">9.4 Superb</span>
+                                    <span class="review-count">840 reviews</span>
+                                </div>
+                                <div class="amenities">
+                                    <span class="amenity-tag">Free WiFi</span>
+                                    <span class="amenity-tag">Swimming Pool</span>
+                                    <span class="amenity-tag">Breakfast Included</span>
+                                    <span class="amenity-tag">Parking</span>
+                                </div>
+                            </div>
+                            <div class="hotel-price">
+                                <div class="price-value">₹8,500</div>
+                                <div class="price-label">per night</div>
+                            </div>
+                        </div>
+                        <div class="hotel-actions">
+                            <button class="select-room-btn">Select Room →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOTEL 2 -->
+                <div class="hotel-card">
+                    <div class="hotel-image"></div>
+                    <div class="hotel-details">
+                        <div class="hotel-header">
+                            <div class="hotel-info">
+                                <h3>Marina Bay Residency</h3>
+                                <div class="hotel-location">Bay Marina, Chennai, India</div>
+                                <div class="hotel-rating">
+                                    <span class="stars">★★★★☆</span>
+                                    <span class="rating-label">8.2 Very Good</span>
+                                    <span class="review-count">620 reviews</span>
+                                </div>
+                                <div class="amenities">
+                                    <span class="amenity-tag">Free WiFi</span>
+                                    <span class="amenity-tag">Gym</span>
+                                    <span class="amenity-tag">Parking</span>
+                                </div>
+                            </div>
+                            <div class="hotel-price">
+                                <div class="price-value">₹5,800</div>
+                                <div class="price-label">per night</div>
+                            </div>
+                        </div>
+                        <div class="hotel-actions">
+                            <button class="select-room-btn">Select Room →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOTEL 3 -->
+                <div class="hotel-card">
+                    <div class="hotel-image"></div>
+                    <div class="hotel-details">
+                        <div class="hotel-header">
+                            <div class="hotel-info">
+                                <h3>Heritage Palms Resort & Spa</h3>
+                                <div class="hotel-location">Central Chennai, India</div>
+                                <div class="hotel-rating">
+                                    <span class="stars">★★★★★</span>
+                                    <span class="rating-label">9.8 Exceptional</span>
+                                    <span class="review-count">1,150 reviews</span>
+                                </div>
+                                <div class="amenities">
+                                    <span class="amenity-tag">Free WiFi</span>
+                                    <span class="amenity-tag">Spa</span>
+                                    <span class="amenity-tag">Swimming Pool</span>
+                                    <span class="amenity-tag">Breakfast</span>
+                                </div>
+                            </div>
+                            <div class="hotel-price">
+                                <div class="price-value">₹12,300</div>
+                                <div class="price-label">per night</div>
+                            </div>
+                        </div>
+                        <div class="hotel-actions">
+                            <button class="select-room-btn">Select Room →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOTEL 4 -->
+                <div class="hotel-card">
+                    <div class="hotel-image"></div>
+                    <div class="hotel-details">
+                        <div class="hotel-header">
+                            <div class="hotel-info">
+                                <h3>Skyline Tower Suites</h3>
+                                <div class="hotel-location">Downtown Chennai, India</div>
+                                <div class="hotel-rating">
+                                    <span class="stars">★★★★★</span>
+                                    <span class="rating-label">9.6 Exceptional</span>
+                                    <span class="review-count">1,420 reviews</span>
+                                </div>
+                                <div class="amenities">
+                                    <span class="amenity-tag">Free WiFi</span>
+                                    <span class="amenity-tag">Business Center</span>
+                                    <span class="amenity-tag">Parking</span>
+                                    <span class="amenity-tag">Gym</span>
+                                </div>
+                            </div>
+                            <div class="hotel-price">
+                                <div class="price-value">₹7,200</div>
+                                <div class="price-label">per night</div>
+                            </div>
+                        </div>
+                        <div class="hotel-actions">
+                            <button class="select-room-btn">Select Room →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAGINATION -->
+                <div class="pagination">
+                    <button class="pagination-btn" disabled>← Previous</button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <span style="color: var(--text-gray); font-size: 13px;">...</span>
+                    <button class="pagination-btn">Next →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <div class="footer-logo-section">
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon">🏠</div>
+                        <span>StayEase</span>
+                    </div>
+                    <div class="footer-desc">Your trusted partner in finding the perfect accommodation, anywhere in the world.</div>
+                    <div class="social-icons">
+                        <div class="social-icon">f</div>
+                        <div class="social-icon">𝕏</div>
+                        <div class="social-icon">📷</div>
+                        <div class="social-icon">in</div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="hotel-list.html">Browse Hotels</a></li>
+                    <li><a href="index.html#destinations">Destinations</a></li>
+                    <li><a href="booking.html">My Bookings</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#help">Help Center</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#feedback">Feedback</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Policies</h3>
+                <ul>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms & Conditions</a></li>
+                    <li><a href="#cancellation">Cancellation Policy</a></li>
+                    <li><a href="#security">Security</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 StayEase. All rights reserved. | Made with ❤️ for travelers worldwide</p>
+        </div>
+    </footer>
+</body>
+</html>
